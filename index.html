@@ -47,8 +47,14 @@
     }
 
     .moon-indicator {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       font-size: 1rem;
-      margin-right: 1rem;
+    }
+
+    .moon-indicator span.emoji {
+      font-size: 1.5rem;
     }
 
     .lang-button {
@@ -67,7 +73,7 @@
 
     main.container {
       max-width: 1000px;
-      margin: 2rem auto;
+      margin: 1rem auto;
       padding: 0 1rem;
       text-align: center;
     }
@@ -79,6 +85,13 @@
       justify-content: center;
       height: 100vh;
       text-align: center;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 10;
+      background-color: #0d0d2b;
     }
 
     .spinner {
@@ -298,13 +311,17 @@
   <!-- Хедер -->
   <header class="header glass">
     <h1 id="title">Cosmic Archetypes</h1>
-    <div id="moon-phase" class="moon-indicator">🌑 Новолуние</div>
+    <div id="moon-phase" class="moon-indicator">
+      <span class="emoji">🌑</span>
+      <span>Новолуние</span>
+    </div>
     <button id="lang-switch" class="lang-button">RU</button>
   </header>
 
   <!-- Основной контент -->
   <main class="container">
-    <!-- Экран загрузки -->
+
+    <!-- Анимация загрузки -->
     <section class="loading-screen active" id="loader">
       <div class="spinner"></div>
       <p id="loading-text">Connecting to the Cosmic Field...</p>
@@ -336,12 +353,12 @@
     </div>
   </div>
 
-  <!-- Подключаем Particles.js из CDN -->
+  <!-- Particles.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script> 
 
   <!-- Встраиваем JS напрямую -->
   <script>
-    // Все данные о картах, переводах и значениях
+    // Данные о картах
     const cardImages = [
       "fool.jpg", "magician.jpg", "highpriestess.jpg", "empress.jpg", "emperor.jpg",
       "hierophant.jpg", "the_lovers.jpg", "the_chariot.jpg", "strength.jpg", "the_hermit.jpg",
@@ -361,6 +378,7 @@
       "page_of_pentacles.jpg", "knight_of_pentacles.jpg", "queen_of_pentacles.jpg", "king_of_pentacles.jpg"
     ];
 
+    // Русские названия
     const cardNamesRu = {
       "fool.jpg": "Шут",
       "magician.jpg": "Маг",
@@ -442,13 +460,14 @@
       "king_of_pentacles.jpg": "Король Пентаклей"
     };
 
+    // Английские названия
     const cardNamesEn = Object.fromEntries(
       Object.entries(cardNamesRu).map(([key]) => [key, key.replace(".jpg", "").replace(/_/g, " ")])
     );
 
+    // Значения карт
     const meanings = {
       en: {
-        // Major Arcana
         "fool.jpg": "New beginnings, spontaneity, limitless potential.",
         "magician.jpg": "Power, skill, concentration, manifestation.",
         "highpriestess.jpg": "Intuition, subconscious, inner wisdom.",
@@ -471,7 +490,6 @@
         "the_sun.jpg": "Joy, success, vitality, celebration.",
         "judgment.jpg": "Reflection, reckoning, awakening.",
         "the_world.jpg": "Completion, wholeness, travel.",
-        // Wands
         "ace_of_wands.jpg": "Inspiration, new opportunities, growth.",
         "two_of_wands.jpg": "Planning, choices, foresight.",
         "three_of_wands.jpg": "Expansion, progress, long-term vision.",
@@ -486,7 +504,6 @@
         "knight_of_wands.jpg": "Chivalry, passion, energy.",
         "queen_of_wands.jpg": "Confidence, charisma, warmth.",
         "king_of_wands.jpg": "Leadership, vision, authority.",
-        // Cups
         "ace_of_cups.jpg": "Emotional beginning, love, healing.",
         "two_of_cups.jpg": "Partnership, mutual connection.",
         "three_of_cups.jpg": "Friendship, celebration, support.",
@@ -501,7 +518,6 @@
         "knight_of_cups.jpg": "Romantic, charming, courteous.",
         "queen_of_cups.jpg": "Empathy, compassion, calm.",
         "king_of_cups.jpg": "Emotional balance, diplomacy.",
-        // Swords
         "ace_of_swords.jpg": "Truth, clarity, breakthrough.",
         "two_of_swords.jpg": "Stalemate, difficult choice.",
         "three_of_swords.jpg": "Heartbreak, sorrow, betrayal.",
@@ -516,7 +532,6 @@
         "knight_of_swords.jpg": "Impulsiveness, directness, speed.",
         "queen_of_swords.jpg": "Clarity, independence, honesty.",
         "king_of_swords.jpg": "Intellect, leadership, fairness.",
-        // Pentacles
         "ace_of_pentacles.jpg": "Material gain, prosperity, abundance.",
         "two_of_pentacles.jpg": "Balance, adaptability, juggling.",
         "three_of_pentacles.jpg": "Teamwork, collaboration, craftsmanship.",
@@ -533,7 +548,6 @@
         "king_of_pentacles.jpg": "Wealth, stability, business."
       },
       ru: {
-        // Major Arcana
         "fool.jpg": "Новые начинания, импульсивность, безграничный потенциал.",
         "magician.jpg": "Власть, мастерство, концентрация, проявление.",
         "highpriestess.jpg": "Интуиция, подсознание, внутренняя мудрость.",
@@ -556,7 +570,6 @@
         "the_sun.jpg": "Радость, успех, жизненная энергия, торжество.",
         "judgment.jpg": "Рефлексия, пробуждение, осознание.",
         "the_world.jpg": "Завершение, целостность, путешествие.",
-        // Wands
         "ace_of_wands.jpg": "Вдохновение, новые возможности, рост.",
         "two_of_wands.jpg": "Планирование, выбор, дальновидность.",
         "three_of_wands.jpg": "Расширение, прогресс, долгосрочные цели.",
@@ -571,7 +584,6 @@
         "knight_of_wands.jpg": "Галантность, страсть, энергия.",
         "queen_of_wands.jpg": "Уверенность, харизма, тепло.",
         "king_of_wands.jpg": "Лидерство, видение, авторитет.",
-        // Cups
         "ace_of_cups.jpg": "Эмоциональное начало, любовь, исцеление.",
         "two_of_cups.jpg": "Партнерство, взаимопонимание.",
         "three_of_cups.jpg": "Дружба, праздник, поддержка.",
@@ -586,7 +598,6 @@
         "knight_of_cups.jpg": "Романтичность, обаяние, учтивость.",
         "queen_of_cups.jpg": "Сочувствие, доброта, спокойствие.",
         "king_of_cups.jpg": "Эмоциональное равновесие, дипломатичность.",
-        // Swords
         "ace_of_swords.jpg": "Истина, ясность, прорыв.",
         "two_of_swords.jpg": "Патовая ситуация, сложный выбор.",
         "three_of_swords.jpg": "Разбитое сердце, скорбь, предательство.",
@@ -601,7 +612,6 @@
         "knight_of_swords.jpg": "Поспешность, прямота, скорость.",
         "queen_of_swords.jpg": "Ясность, независимость, честность.",
         "king_of_swords.jpg": "Интеллект, лидерство, справедливость.",
-        // Pentacles
         "ace_of_pentacles.jpg": "Материальное благополучие, процветание, изобилие.",
         "two_of_pentacles.jpg": "Баланс, адаптивность, управление.",
         "three_of_pentacles.jpg": "Сотрудничество, командная работа, мастерство.",
@@ -629,20 +639,17 @@
       document.getElementById("saved-label").textContent = translations[currentLang].savedLayouts;
       document.getElementById("loading-text").textContent = translations[currentLang].loading;
 
-      // Обновить названия карт
       document.querySelectorAll(".card-name").forEach(el => {
         const cardFile = el.dataset.card;
         el.textContent = currentLang === "ru" ? cardNamesRu[cardFile] : cardNamesEn[cardFile];
       });
 
-      // Обновить значения карт
       document.querySelectorAll(".card-back").forEach(backEl => {
         const cardFile = backEl.closest('.card')?.querySelector('img')?.src.split("/").pop();
         if (!cardFile) return;
         backEl.textContent = meanings[currentLang][cardFile] || "Значение отсутствует.";
       });
 
-      // Обновить кнопку переключения языка
       document.getElementById("lang-switch").textContent = currentLang === "en" ? "RU" : "EN";
     }
 
@@ -746,6 +753,7 @@
         },
         "retina_detect": true
       });
+
       updateText();
       displayMoonPhase();
       loadSavedLayouts();
@@ -761,7 +769,6 @@
       const count = parseInt(document.getElementById("card-count").value);
       const container = document.getElementById("cards");
       container.innerHTML = "";
-
       const shuffled = [...cardImages].sort(() => Math.random() - 0.5).slice(0, count);
 
       shuffled.forEach((card) => {
@@ -950,7 +957,10 @@
         "Waning Crescent": "Старая Луна"
       };
 
-      moonEl.innerHTML = `${phase.emoji} ${currentLang === "ru" ? ruPhases[phase.name] : phase.name}`;
+      moonEl.innerHTML = `
+        <span class="emoji">${phase.emoji}</span>
+        <span>${currentLang === "ru" ? ruPhases[phase.name] : phase.name}</span>
+      `;
     }
   </script>
 </body>
