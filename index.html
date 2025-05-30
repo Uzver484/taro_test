@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Cosmic Tarot</title>
+  <title>Cosmic Archetypes</title>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Montserrat:wght@300;500;700&display=swap" rel="stylesheet">
   <style>
     * {
@@ -47,14 +47,10 @@
     }
 
     .moon-indicator {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
       font-size: 1rem;
-    }
-
-    .moon-indicator span.emoji {
-      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
     .lang-button {
@@ -310,11 +306,8 @@
 
   <!-- Хедер -->
   <header class="header glass">
-    <h1 id="title">Cosmic Tarot</h1>
-    <div id="moon-phase" class="moon-indicator">
-      <span class="emoji">🌑</span>
-      <span>Новолуние</span>
-    </div>
+    <h1 id="title">Cosmic Archetypes</h1>
+    <div id="moon-phase" class="moon-indicator">🌑 Новолуние</div>
     <button id="lang-switch" class="lang-button">RU</button>
   </header>
 
@@ -356,9 +349,8 @@
   <!-- Particles.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script> 
 
-  <!-- Встраиваем JS напрямую -->
+  <!-- Inline скрипт с данными -->
   <script>
-    // Данные о картах
     const cardImages = [
       "fool.jpg", "magician.jpg", "highpriestess.jpg", "empress.jpg", "emperor.jpg",
       "hierophant.jpg", "the_lovers.jpg", "the_chariot.jpg", "strength.jpg", "the_hermit.jpg",
@@ -378,7 +370,6 @@
       "page_of_pentacles.jpg", "knight_of_pentacles.jpg", "queen_of_pentacles.jpg", "king_of_pentacles.jpg"
     ];
 
-    // Русские названия
     const cardNamesRu = {
       "fool.jpg": "Шут",
       "magician.jpg": "Маг",
@@ -460,14 +451,13 @@
       "king_of_pentacles.jpg": "Король Пентаклей"
     };
 
-    // Английские названия
     const cardNamesEn = Object.fromEntries(
       Object.entries(cardNamesRu).map(([key]) => [key, key.replace(".jpg", "").replace(/_/g, " ")])
     );
 
-    // Значения карт
     const meanings = {
       en: {
+        // Major Arcana
         "fool.jpg": "New beginnings, spontaneity, limitless potential.",
         "magician.jpg": "Power, skill, concentration, manifestation.",
         "highpriestess.jpg": "Intuition, subconscious, inner wisdom.",
@@ -490,6 +480,7 @@
         "the_sun.jpg": "Joy, success, vitality, celebration.",
         "judgment.jpg": "Reflection, reckoning, awakening.",
         "the_world.jpg": "Completion, wholeness, travel.",
+        // Wands
         "ace_of_wands.jpg": "Inspiration, new opportunities, growth.",
         "two_of_wands.jpg": "Planning, choices, foresight.",
         "three_of_wands.jpg": "Expansion, progress, long-term vision.",
@@ -504,6 +495,7 @@
         "knight_of_wands.jpg": "Chivalry, passion, energy.",
         "queen_of_wands.jpg": "Confidence, charisma, warmth.",
         "king_of_wands.jpg": "Leadership, vision, authority.",
+        // Cups
         "ace_of_cups.jpg": "Emotional beginning, love, healing.",
         "two_of_cups.jpg": "Partnership, mutual connection.",
         "three_of_cups.jpg": "Friendship, celebration, support.",
@@ -518,6 +510,7 @@
         "knight_of_cups.jpg": "Romantic, charming, courteous.",
         "queen_of_cups.jpg": "Empathy, compassion, calm.",
         "king_of_cups.jpg": "Emotional balance, diplomacy.",
+        // Swords
         "ace_of_swords.jpg": "Truth, clarity, breakthrough.",
         "two_of_swords.jpg": "Stalemate, difficult choice.",
         "three_of_swords.jpg": "Heartbreak, sorrow, betrayal.",
@@ -532,6 +525,7 @@
         "knight_of_swords.jpg": "Impulsiveness, directness, speed.",
         "queen_of_swords.jpg": "Clarity, independence, honesty.",
         "king_of_swords.jpg": "Intellect, leadership, fairness.",
+        // Pentacles
         "ace_of_pentacles.jpg": "Material gain, prosperity, abundance.",
         "two_of_pentacles.jpg": "Balance, adaptability, juggling.",
         "three_of_pentacles.jpg": "Teamwork, collaboration, craftsmanship.",
@@ -570,6 +564,7 @@
         "the_sun.jpg": "Радость, успех, жизненная энергия, торжество.",
         "judgment.jpg": "Рефлексия, пробуждение, осознание.",
         "the_world.jpg": "Завершение, целостность, путешествие.",
+        // Wands
         "ace_of_wands.jpg": "Вдохновение, новые возможности, рост.",
         "two_of_wands.jpg": "Планирование, выбор, дальновидность.",
         "three_of_wands.jpg": "Расширение, прогресс, долгосрочные цели.",
@@ -584,6 +579,7 @@
         "knight_of_wands.jpg": "Галантность, страсть, энергия.",
         "queen_of_wands.jpg": "Уверенность, харизма, тепло.",
         "king_of_wands.jpg": "Лидерство, видение, авторитет.",
+        // Cups
         "ace_of_cups.jpg": "Эмоциональное начало, любовь, исцеление.",
         "two_of_cups.jpg": "Партнерство, взаимопонимание.",
         "three_of_cups.jpg": "Дружба, праздник, поддержка.",
@@ -598,6 +594,7 @@
         "knight_of_cups.jpg": "Романтичность, обаяние, учтивость.",
         "queen_of_cups.jpg": "Сочувствие, доброта, спокойствие.",
         "king_of_cups.jpg": "Эмоциональное равновесие, дипломатичность.",
+        // Swords
         "ace_of_swords.jpg": "Истина, ясность, прорыв.",
         "two_of_swords.jpg": "Патовая ситуация, сложный выбор.",
         "three_of_swords.jpg": "Разбитое сердце, скорбь, предательство.",
@@ -612,6 +609,7 @@
         "knight_of_swords.jpg": "Поспешность, прямота, скорость.",
         "queen_of_swords.jpg": "Ясность, независимость, честность.",
         "king_of_swords.jpg": "Интеллект, лидерство, справедливость.",
+        // Pentacles
         "ace_of_pentacles.jpg": "Материальное благополучие, процветание, изобилие.",
         "two_of_pentacles.jpg": "Баланс, адаптивность, управление.",
         "three_of_pentacles.jpg": "Сотрудничество, командная работа, мастерство.",
@@ -655,7 +653,7 @@
 
     const translations = {
       en: {
-        title: "Cosmic Tarot",
+        title: "Cosmic Archetypes",
         chooseCards: "Choose number of cards:",
         reveal: "Reveal Cards",
         saveLayout: "Save this layout",
@@ -663,7 +661,7 @@
         loading: "Connecting to the Cosmic Field..."
       },
       ru: {
-        title: "Космическое Таро",
+        title: "Космические Архетипы",
         chooseCards: "Выберите количество карт:",
         reveal: "Показать Карты",
         saveLayout: "Сохранить Расклад",
@@ -676,93 +674,47 @@
       currentLang = currentLang === "en" ? "ru" : "en";
       localStorage.setItem("lang", currentLang);
       updateText();
+      displayMoonPhase();
     });
 
     document.addEventListener("DOMContentLoaded", () => {
-      particlesJS.load('particles-js', '', {
-        "particles": {
-          "number": {
-            "value": 160,
-            "density": {
-              "enable": true,
-              "value_area": 800
-            }
+      // Настройка частиц
+      particlesJS.init({
+        selector: '#particles-js',
+        height: '100%',
+        width: '100%',
+        fpsLimit: 60,
+        interactivity: {
+          events: {
+            onClick: { enable: true, mode: "push" },
+            onHover: { enable: true, mode: "repulse" }
           },
-          "color": {
-            "value": ["#ffffff", "#cceeff", "#ffccff"]
-          },
-          "shape": {
-            "type": "circle"
-          },
-          "opacity": {
-            "value": 0.5,
-            "random": true,
-            "anim": {
-              "enable": true,
-              "speed": 0.5,
-              "opacity_min": 0.1,
-              "sync": false
-            }
-          },
-          "size": {
-            "value": 2,
-            "random": true,
-            "anim": {
-              "enable": true,
-              "speed": 2,
-              "size_min": 1,
-              "sync": false
-            }
-          },
-          "line_linked": {
-            "enable": true,
-            "distance": 150,
-            "color": "#ffffff",
-            "opacity": 0.2,
-            "width": 1
-          },
-          "move": {
-            "enable": true,
-            "speed": 0.5,
-            "direction": "none",
-            "random": true,
-            "straight": false,
-            "out_mode": "bounce"
+          modes: {
+            push: { quantity: 4 },
+            repulse: { distance: 70, duration: 0.4 }
           }
         },
-        "interactivity": {
-          "events": {
-            "onhover": {
-              "enable": true,
-              "mode": "repulse"
-            },
-            "onclick": {
-              "enable": true,
-              "mode": "push"
-            }
-          },
-          "modes": {
-            "repulse": {
-              "distance": 70,
-              "duration": 0.4
-            },
-            "push": {
-              "particles_nb": 4
-            }
-          }
+        particles: {
+          color: { value: ["#ffffff", "#cceeff", "#ffccff"] },
+          lineLinked: { enable: true, distance: 150, color: "#ffffff", opacity: 0.2, width: 1 },
+          move: { enable: true, speed: 0.5, direction: "none", random: true, straight: false, outMode: "bounce" },
+          size: { value: 2, random: true, anim: { enable: true, speed: 2, sizeMin: 1 } },
+          opacity: { value: 0.5, random: true, anim: { enable: true, speed: 0.5, opacityMin: 0.1 } },
+          number: { value: 160, density: { enable: true, area: 800 } },
+          shape: { type: "circle" }
         },
-        "retina_detect": true
+        detectRetina: true
       });
 
       updateText();
       displayMoonPhase();
       loadSavedLayouts();
 
-      window.addEventListener("load", () => {
-  loader.classList.remove("active");
-  loader.style.display = "none";
-  document.getElementById("app").classList.remove("hidden");
-});
+      setTimeout(() => {
+        document.getElementById("loader").classList.remove("active");
+        document.getElementById("loader").style.display = "none";
+        document.getElementById("app").classList.remove("hidden");
+      }, 3000);
     });
 
     document.querySelector("form").addEventListener("submit", e => {
@@ -946,7 +898,6 @@
     function displayMoonPhase() {
       const phase = getMoonPhase();
       const moonEl = document.getElementById("moon-phase");
-
       const ruPhases = {
         "New Moon": "Новолуние",
         "Waxing Crescent": "Молодая Луна",
@@ -957,12 +908,36 @@
         "Last Quarter": "Последняя Четверть",
         "Waning Crescent": "Старая Луна"
       };
-
-      moonEl.innerHTML = `
-        <span class="emoji">${phase.emoji}</span>
-        <span>${currentLang === "ru" ? ruPhases[phase.name] : phase.name}</span>
-      `;
+      moonEl.innerHTML = `${phase.emoji} ${currentLang === "ru" ? ruPhases[phase.name] : phase.name}`;
     }
+
+    // Конфиг particles.js
+    particlesJS.init({
+      selector: '#particles-js',
+      height: '100%',
+      width: '100%',
+      fpsLimit: 60,
+      interactivity: {
+        events: {
+          onClick: { enable: true, mode: "push" },
+          onHover: { enable: true, mode: "repulse" }
+        },
+        modes: {
+          push: { quantity: 4 },
+          repulse: { distance: 70, duration: 0.4 }
+        }
+      },
+      particles: {
+        color: { value: ["#ffffff", "#cceeff", "#ffccff"] },
+        lineLinked: { enable: true, distance: 150, color: "#ffffff", opacity: 0.2, width: 1 },
+        move: { enable: true, speed: 0.5, direction: "none", random: true, straight: false, outMode: "bounce" },
+        size: { value: 2, random: true, anim: { enable: true, speed: 2, sizeMin: 1 } },
+        opacity: { value: 0.5, random: true, anim: { enable: true, speed: 0.5, opacityMin: 0.1 } },
+        number: { value: 160, density: { enable: true, area: 800 } },
+        shape: { type: "circle" }
+      },
+      detectRetina: true
+    });
   </script>
 </body>
 </html>
