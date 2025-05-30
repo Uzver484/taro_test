@@ -758,10 +758,11 @@
       displayMoonPhase();
       loadSavedLayouts();
 
-      setTimeout(() => {
-        document.getElementById("loader").classList.remove("active");
-        document.getElementById("app").classList.remove("hidden");
-      }, 3000);
+      window.addEventListener("load", () => {
+  loader.classList.remove("active");
+  loader.style.display = "none";
+  document.getElementById("app").classList.remove("hidden");
+});
     });
 
     document.querySelector("form").addEventListener("submit", e => {
