@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Cosmic Archetypes</title>
+  <title>Cosmic Tarot</title>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Montserrat:wght@300;500;700&display=swap" rel="stylesheet">
   <style>
     * {
@@ -47,10 +47,10 @@
     }
 
     .moon-indicator {
-      font-size: 1rem;
       display: flex;
       align-items: center;
       gap: 6px;
+      font-size: 1rem;
     }
 
     .lang-button {
@@ -306,7 +306,7 @@
 
   <!-- Хедер -->
   <header class="header glass">
-    <h1 id="title">Cosmic Archetypes</h1>
+    <h1 id="title">Cosmic Tarot</h1>
     <div id="moon-phase" class="moon-indicator">🌑 Новолуние</div>
     <button id="lang-switch" class="lang-button">RU</button>
   </header>
@@ -314,7 +314,7 @@
   <!-- Основной контент -->
   <main class="container">
 
-    <!-- Анимация загрузки -->
+    <!-- Экран загрузки -->
     <section class="loading-screen active" id="loader">
       <div class="spinner"></div>
       <p id="loading-text">Connecting to the Cosmic Field...</p>
@@ -349,7 +349,7 @@
   <!-- Particles.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script> 
 
-  <!-- Inline скрипт с данными -->
+  <!-- Встроенные данные -->
   <script>
     const cardImages = [
       "fool.jpg", "magician.jpg", "highpriestess.jpg", "empress.jpg", "emperor.jpg",
@@ -451,10 +451,6 @@
       "king_of_pentacles.jpg": "Король Пентаклей"
     };
 
-    const cardNamesEn = Object.fromEntries(
-      Object.entries(cardNamesRu).map(([key]) => [key, key.replace(".jpg", "").replace(/_/g, " ")])
-    );
-
     const meanings = {
       en: {
         // Major Arcana
@@ -542,6 +538,7 @@
         "king_of_pentacles.jpg": "Wealth, stability, business."
       },
       ru: {
+        // Major Arcana
         "fool.jpg": "Новые начинания, импульсивность, безграничный потенциал.",
         "magician.jpg": "Власть, мастерство, концентрация, проявление.",
         "highpriestess.jpg": "Интуиция, подсознание, внутренняя мудрость.",
@@ -600,7 +597,7 @@
         "three_of_swords.jpg": "Разбитое сердце, скорбь, предательство.",
         "four_of_swords.jpg": "Покой, отдых, восстановление сил.",
         "five_of_swords.jpg": "Конфликт, поражение, потеря.",
-        "six_of_swords.jpg": "Переход, движение вперёд.",
+        "six_of_swords.jpg": "Переход, движение вперед.",
         "seven_of_swords.jpg": "Обман, нечестность, коварство.",
         "eight_of_swords.jpg": "Плен, ограничения, беспомощность.",
         "nine_of_swords.jpg": "Тревога, страх, кошмары.",
@@ -624,6 +621,29 @@
         "knight_of_pentacles.jpg": "Ответственность, надёжность, терпение.",
         "queen_of_pentacles.jpg": "Безопасность, уют, забота.",
         "king_of_pentacles.jpg": "Богатство, стабильность, бизнес."
+      }
+    };
+
+    const cardNamesEn = Object.fromEntries(
+      Object.entries(cardNamesRu).map(([key]) => [key, key.replace(".jpg", "").replace(/_/g, " ")])
+    );
+
+    const translations = {
+      en: {
+        title: "Cosmic Tarot",
+        chooseCards: "Choose number of cards:",
+        reveal: "Reveal Cards",
+        saveLayout: "Save this layout",
+        savedLayouts: "Saved Layouts",
+        loading: "Connecting to the Cosmic Field..."
+      },
+      ru: {
+        title: "ТАРО",
+        chooseCards: "Выберите количество карт:",
+        reveal: "Показать Карты",
+        saveLayout: "Сохранить Расклад",
+        savedLayouts: "Сохранённые Расклады",
+        loading: "Подключение к Космическому Полю..."
       }
     };
 
@@ -651,25 +671,6 @@
       document.getElementById("lang-switch").textContent = currentLang === "en" ? "RU" : "EN";
     }
 
-    const translations = {
-      en: {
-        title: "Cosmic Archetypes",
-        chooseCards: "Choose number of cards:",
-        reveal: "Reveal Cards",
-        saveLayout: "Save this layout",
-        savedLayouts: "Saved Layouts",
-        loading: "Connecting to the Cosmic Field..."
-      },
-      ru: {
-        title: "Космические Архетипы",
-        chooseCards: "Выберите количество карт:",
-        reveal: "Показать Карты",
-        saveLayout: "Сохранить Расклад",
-        savedLayouts: "Сохранённые Расклады",
-        loading: "Подключение к Космическому Полю..."
-      }
-    };
-
     document.getElementById("lang-switch").addEventListener("click", () => {
       currentLang = currentLang === "en" ? "ru" : "en";
       localStorage.setItem("lang", currentLang);
@@ -677,50 +678,111 @@
       displayMoonPhase();
     });
 
+    function getMoonPhase(date = new Date()) {
+      const moonCycles = 29.530588853;
+      const newMoonDate = new Date(2000, 0, 6, 18, 14);
+      const daysSince = (date - newMoonDate) / (1000 * 60 * 60 * 24);
+      const phase = ((daysSince % moonCycles) + moonCycles) % moonCycles;
+
+      const phases = [
+        { name: "New Moon", emoji: "🌑" },
+        { name: "Waxing Crescent", emoji: "🌒" },
+        { name: "First Quarter", emoji: "🌓" },
+        { name: "Waxing Gibbous", emoji: "🌔" },
+        { name: "Full Moon", emoji: "🌕" },
+        { name: "Waning Gibbous", emoji: "🌖" },
+        { name: "Last Quarter", emoji: "🌗" },
+        { name: "Waning Crescent", emoji: "🌘" }
+      ];
+
+      const index = Math.floor((phase / moonCycles) * 8);
+      return phases[index];
+    }
+
+    function displayMoonPhase() {
+      const phase = getMoonPhase();
+      const moonEl = document.getElementById("moon-phase");
+
+      const ruPhases = {
+        "New Moon": "Новолуние",
+        "Waxing Crescent": "Молодая Луна",
+        "First Quarter": "Первая Четверть",
+        "Waxing Gibbous": "Растущая Луна",
+        "Full Moon": "Полнолуние",
+        "Waning Gibbous": "Убывающая Луна",
+        "Last Quarter": "Последняя Четверть",
+        "Waning Crescent": "Старая Луна"
+      };
+
+      moonEl.innerHTML = `${phase.emoji} ${currentLang === "ru" ? ruPhases[phase.name] : phase.name}`;
+    }
+
+    function showModal(filename) {
+      const modal = document.getElementById("modal");
+      const img = document.getElementById("modal-img");
+      const title = document.getElementById("modal-title");
+      const meaning = document.getElementById("modal-meaning");
+
+      img.src = `images/cards/${filename}`;
+      title.textContent = currentLang === "ru" ? cardNamesRu[filename] : cardNamesEn[filename];
+      meaning.textContent = meanings[currentLang][filename] || "Значение отсутствует.";
+
+      modal.classList.remove("hidden");
+    }
+
     document.addEventListener("DOMContentLoaded", () => {
-      // Настройка частиц
-      particlesJS.init({
-        selector: '#particles-js',
-        height: '100%',
-        width: '100%',
-        fpsLimit: 60,
-        interactivity: {
-          events: {
-            onClick: { enable: true, mode: "push" },
-            onHover: { enable: true, mode: "repulse" }
+      particlesJS.load('particles-js', '', {
+        "particles": {
+          "number": {"value": 160, "density": {"enable": true, "value_area": 800}},
+          "color": {"value": ["#ffffff", "#cceeff", "#ffccff"]},
+          "shape": {"type": "circle"},
+          "opacity": {
+            "value": 0.5,
+            "random": true,
+            "anim": {"enable": true, "speed": 0.5, "opacity_min": 0.1}
           },
-          modes: {
-            push: { quantity: 4 },
-            repulse: { distance: 70, duration: 0.4 }
+          "size": {
+            "value": 2,
+            "random": true,
+            "anim": {"enable": true, "speed": 2, "size_min": 1}
+          },
+          "line_linked": {"enable": true, "distance": 150, "color": "#ffffff", "opacity": 0.2, "width": 1},
+          "move": {"enable": true, "speed": 0.5, "direction": "none", "random": true, "straight": false, "out_mode": "bounce"}
+        },
+        "interactivity": {
+          "events": {
+            "onhover": {"enable": true, "mode": "repulse"},
+            "onclick": {"enable": true, "mode": "push"}
+          },
+          "modes": {
+            "repulse": {"distance": 70, "duration": 0.4},
+            "push": {"particles_nb": 4}
           }
         },
-        particles: {
-          color: { value: ["#ffffff", "#cceeff", "#ffccff"] },
-          lineLinked: { enable: true, distance: 150, color: "#ffffff", opacity: 0.2, width: 1 },
-          move: { enable: true, speed: 0.5, direction: "none", random: true, straight: false, outMode: "bounce" },
-          size: { value: 2, random: true, anim: { enable: true, speed: 2, sizeMin: 1 } },
-          opacity: { value: 0.5, random: true, anim: { enable: true, speed: 0.5, opacityMin: 0.1 } },
-          number: { value: 160, density: { enable: true, area: 800 } },
-          shape: { type: "circle" }
-        },
-        detectRetina: true
-      });
+        "retina_detect": true
+      }, () => console.log("Particles loaded"));
 
       updateText();
       displayMoonPhase();
       loadSavedLayouts();
 
-      window.addEventListener("load", () => {
-  loader.classList.remove("active");
-  loader.style.display = "none";
-  document.getElementById("app").classList.remove("hidden");
-});
+      setTimeout(() => {
+        const loader = document.getElementById("loader");
+        const app = document.getElementById("app");
+        if (loader && app) {
+          loader.classList.remove("active");
+          loader.style.display = "none";
+          app.classList.remove("hidden");
+        }
+      }, 3000);
+    });
 
     document.querySelector("form").addEventListener("submit", e => {
       e.preventDefault();
       const count = parseInt(document.getElementById("card-count").value);
       const container = document.getElementById("cards");
       container.innerHTML = "";
+
       const shuffled = [...cardImages].sort(() => Math.random() - 0.5).slice(0, count);
 
       shuffled.forEach((card) => {
@@ -849,68 +911,21 @@
         container.appendChild(cardDiv);
       });
     };
+  </script>
 
-    function showModal(filename) {
-      const modal = document.getElementById("modal");
-      const img = document.getElementById("modal-img");
-      const title = document.getElementById("modal-title");
-      const meaning = document.getElementById("modal-meaning");
-
-      img.src = `images/cards/${filename}`;
-      title.textContent = currentLang === "ru" ? cardNamesRu[filename] : cardNamesEn[filename];
-      meaning.textContent = meanings[currentLang][filename] || "Значение отсутствует.";
-
-      modal.classList.remove("hidden");
-    }
-
+  <!-- Обработчики модального окна -->
+  <script>
     document.querySelector(".close-btn").addEventListener("click", () => {
       document.getElementById("modal").classList.add("hidden");
     });
 
     document.getElementById("modal").addEventListener("click", function(e) {
-      if (e.target === this) {
-        this.classList.add("hidden");
-      }
+      if (e.target === this) this.classList.add("hidden");
     });
+  </script>
 
-    function getMoonPhase(date = new Date()) {
-      const moonCycles = 29.530588853;
-      const newMoonDate = new Date(2000, 0, 6, 18, 14);
-      const daysSince = (date - newMoonDate) / (1000 * 60 * 60 * 24);
-      const phase = ((daysSince % moonCycles) + moonCycles) % moonCycles;
-
-      const phases = [
-        { name: "New Moon", emoji: "🌑" },
-        { name: "Waxing Crescent", emoji: "🌒" },
-        { name: "First Quarter", emoji: "🌓" },
-        { name: "Waxing Gibbous", emoji: "🌔" },
-        { name: "Full Moon", emoji: "🌕" },
-        { name: "Waning Gibbous", emoji: "🌖" },
-        { name: "Last Quarter", emoji: "🌗" },
-        { name: "Waning Crescent", emoji: "🌘" }
-      ];
-
-      const index = Math.floor((phase / moonCycles) * 8);
-      return phases[index];
-    }
-
-    function displayMoonPhase() {
-      const phase = getMoonPhase();
-      const moonEl = document.getElementById("moon-phase");
-      const ruPhases = {
-        "New Moon": "Новолуние",
-        "Waxing Crescent": "Молодая Луна",
-        "First Quarter": "Первая Четверть",
-        "Waxing Gibbous": "Растущая Луна",
-        "Full Moon": "Полнолуние",
-        "Waning Gibbous": "Убывающая Луна",
-        "Last Quarter": "Последняя Четверть",
-        "Waning Crescent": "Старая Луна"
-      };
-      moonEl.innerHTML = `${phase.emoji} ${currentLang === "ru" ? ruPhases[phase.name] : phase.name}`;
-    }
-
-    // Конфиг particles.js
+  <!-- Particles config -->
+  <script>
     particlesJS.init({
       selector: '#particles-js',
       height: '100%',
@@ -931,7 +946,7 @@
         lineLinked: { enable: true, distance: 150, color: "#ffffff", opacity: 0.2, width: 1 },
         move: { enable: true, speed: 0.5, direction: "none", random: true, straight: false, outMode: "bounce" },
         size: { value: 2, random: true, anim: { enable: true, speed: 2, sizeMin: 1 } },
-        opacity: { value: 0.5, random: true, anim: { enable: true, speed: 0.5, opacityMin: 0.1 } },
+        opacity: { value: 0.5, random: true, anim: { enable: true, speed: 0.5, opacity_min: 0.1 } },
         number: { value: 160, density: { enable: true, area: 800 } },
         shape: { type: "circle" }
       },
