@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cosmic Archetypes</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Montserrat:wght@300;500;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: #0d0d2b; 
+      color: #fff;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    .stars-background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      background: radial-gradient(ellipse at bottom, #0d0d2b 0%, #01010f 100%);
+    }
+
+    header.header {
+      position: relative;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    header h1 {
+      font-family: 'Cinzel Decorative', cursive;
+      font-size: 1.8rem;
+    }
+
+    .moon-indicator {
+      font-size: 1rem;
+      margin-right: 1rem;
+    }
+
+    .lang-button {
+      background: linear-gradient(135deg, #9b59b6, #8e44ad);
+      border: none;
+      color: white;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: all 0.3s ease;
+    }
+
+    .lang-button:hover {
+      background: linear-gradient(135deg, #a55eea, #975ec0);
+    }
+
+    main.container {
+      max-width: 1000px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+      text-align: center;
+    }
+
+    section.loading-screen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+    }
+
+    .spinner {
+      border: 8px solid #ffffff33;
+      border-top: 8px solid #fff;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    form.input-form {
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 2rem;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 1rem;
+      border-radius: 10px;
+      justify-content: center;
+    }
+
+    form input[type="number"] {
+      padding: 0.5rem;
+      border-radius: 5px;
+      border: 1px solid #444;
+      background: #1a1a3c;
+      color: #fff;
+      font-family: 'Cinzel Decorative', cursive;
+      font-size: 1rem;
+      text-align: center;
+      width: 60px;
+    }
+
+    form button {
+      padding: 0.5rem 1.2rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      background: linear-gradient(135deg, #9b59b6, #8e44ad);
+      color: #fff;
+      font-weight: bold;
+      transition: background 0.3s ease;
+    }
+
+    form button:hover {
+      background: linear-gradient(135deg, #a55eea, #975ec0);
+    }
+
+    .cards-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .card {
+      perspective: 1000px;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .card-inner {
+      position: relative;
+      width: 100%;
+      height: 230px;
+      transform-style: preserve-3d;
+      transition: transform 0.6s;
+    }
+
+    .card.flipped .card-inner {
+      transform: rotateY(180deg);
+    }
+
+    .card-front,
+    .card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background-color: #1a1a3c;
+      border-radius: 10px;
+      padding: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      text-align: center;
+    }
+
+    .card-front img {
+      width: 100%;
+      height: 180px;
+      object-fit: contain;
+      border-radius: 8px;
+    }
+
+    .card-name {
+      margin-top: 5px;
+      font-weight: bold;
+      color: #fff;
+    }
+
+    .card-back {
+      transform: rotateY(180deg);
+      color: #ddd;
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+
+    h2#saved-label {
+      margin-top: 2rem;
+      font-size: 1.5rem;
+    }
+
+    .saved-layouts {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 1rem;
+      justify-content: center;
+    }
+
+    .layout-preview {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 1rem;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 180px;
+    }
+
+    .layout-cards img {
+      width: 40px;
+      margin: 2px;
+    }
+
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal:not(.hidden) {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal .modal-content {
+      background: #1a1a3c;
+      padding: 2rem;
+      border-radius: 10px;
+      max-width: 90%;
+      text-align: center;
+    }
+
+    .modal img {
+      width: 100%;
+      max-height: 80vh;
+      object-fit: contain;
+      border-radius: 10px;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      font-size: 2rem;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    .glass {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+    }
+
+    @media (max-width: 600px) {
+      header h1 {
+        font-size: 1.3rem;
+      }
+
+      form.input-form {
+        flex-direction: column;
+      }
+
+      .cards-container {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Звездный фон -->
+  <div class="stars-background" id="particles-js"></div>
+
+  <!-- Хедер -->
+  <header class="header glass">
+    <h1 id="title">Cosmic Archetypes</h1>
+    <div id="moon-phase" class="moon-indicator">🌑 Новолуние</div>
+    <button id="lang-switch" class="lang-button">RU</button>
+  </header>
+
+  <!-- Основной контент -->
+  <main class="container">
+    <!-- Экран загрузки -->
+    <section class="loading-screen active" id="loader">
+      <div class="spinner"></div>
+      <p id="loading-text">Connecting to the Cosmic Field...</p>
+    </section>
+
+    <!-- Приложение -->
+    <section class="content hidden" id="app">
+      <form class="input-form glass">
+        <label for="card-count">Choose number of cards:</label>
+        <input type="number" id="card-count" min="1" max="78" value="3" />
+        <button type="submit">Reveal Cards</button>
+        <button type="button" id="save-layout-btn">Save this layout</button>
+      </form>
+
+      <div class="cards-container" id="cards"></div>
+
+      <h2 id="saved-label">Saved Layouts</h2>
+      <div class="saved-layouts" id="saved-layouts"></div>
+    </section>
+  </main>
+
+  <!-- Модальное окно -->
+  <div class="modal glass hidden" id="modal">
+    <span class="close-btn">&times;</span>
+    <img id="modal-img" src="" alt="Card Image"/>
+    <div class="modal-content">
+      <h2 id="modal-title">Title</h2>
+      <p id="modal-meaning">Meaning</p>
+    </div>
+  </div>
+
+  <!-- Подключаем Particles.js из CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script> 
+
+  <!-- Встраиваем JS напрямую -->
+  <script>
+    // Все данные о картах, переводах и значениях
+    const cardImages = [
+      "fool.jpg", "magician.jpg", "highpriestess.jpg", "empress.jpg", "emperor.jpg",
+      "hierophant.jpg", "the_lovers.jpg", "the_chariot.jpg", "strength.jpg", "the_hermit.jpg",
+      "the_wheel_of_fortune.jpg", "justice.jpg", "the_hanged_man.jpg", "death.jpg", "temperance.jpg",
+      "the_devil.jpg", "the_tower.jpg", "the_star.jpg", "the_moon.jpg", "the_sun.jpg", "judgment.jpg", "the_world.jpg",
+      "ace_of_wands.jpg", "two_of_wands.jpg", "three_of_wands.jpg", "four_of_wands.jpg", "five_of_wands.jpg",
+      "six_of_wands.jpg", "seven_of_wands.jpg", "eight_of_wands.jpg", "nine_of_wands.jpg", "ten_of_wands.jpg",
+      "page_of_wands.jpg", "knight_of_wands.jpg", "queen_of_wands.jpg", "king_of_wands.jpg",
+      "ace_of_cups.jpg", "two_of_cups.jpg", "three_of_cups.jpg", "four_of_cups.jpg", "five_of_cups.jpg",
+      "six_of_cups.jpg", "seven_of_cups.jpg", "eight_of_cups.jpg", "nine_of_cups.jpg", "ten_of_cups.jpg",
+      "page_of_cups.jpg", "knight_of_cups.jpg", "queen_of_cups.jpg", "king_of_cups.jpg",
+      "ace_of_swords.jpg", "two_of_swords.jpg", "three_of_swords.jpg", "four_of_swords.jpg", "five_of_swords.jpg",
+      "six_of_swords.jpg", "seven_of_swords.jpg", "eight_of_swords.jpg", "nine_of_swords.jpg", "ten_of_swords.jpg",
+      "page_of_swords.jpg", "knight_of_swords.jpg", "queen_of_swords.jpg", "king_of_swords.jpg",
+      "ace_of_pentacles.jpg", "two_of_pentacles.jpg", "three_of_pentacles.jpg", "four_of_pentacles.jpg", "five_of_pentacles.jpg",
+      "six_of_pentacles.jpg", "seven_of_pentacles.jpg", "eight_of_pentacles.jpg", "nine_of_pentacles.jpg", "ten_of_pentacles.jpg",
+      "page_of_pentacles.jpg", "knight_of_pentacles.jpg", "queen_of_pentacles.jpg", "king_of_pentacles.jpg"
+    ];
+
+    const cardNamesRu = {
+      "fool.jpg": "Шут",
+      "magician.jpg": "Маг",
+      "highpriestess.jpg": "Верховная Жрица",
+      "empress.jpg": "Императрица",
+      "emperor.jpg": "Император",
+      "hierophant.jpg": "Священнослужитель",
+      "the_lovers.jpg": "Влюблённые",
+      "the_chariot.jpg": "Колесница",
+      "strength.jpg": "Сила",
+      "the_hermit.jpg": "Отшельник",
+      "the_wheel_of_fortune.jpg": "Колесо Фортуны",
+      "justice.jpg": "Справедливость",
+      "the_hanged_man.jpg": "Повешенный",
+      "death.jpg": "Смерть",
+      "temperance.jpg": "Умеренность",
+      "the_devil.jpg": "Дьявол",
+      "the_tower.jpg": "Башня",
+      "the_star.jpg": "Звезда",
+      "the_moon.jpg": "Луна",
+      "the_sun.jpg": "Солнце",
+      "judgment.jpg": "Суд",
+      "the_world.jpg": "Мир",
+      "ace_of_wands.jpg": "Туз Жезлов",
+      "two_of_wands.jpg": "Двойка Жезлов",
+      "three_of_wands.jpg": "Тройка Жезлов",
+      "four_of_wands.jpg": "Четвёрка Жезлов",
+      "five_of_wands.jpg": "Пятёрка Жезлов",
+      "six_of_wands.jpg": "Шестёрка Жезлов",
+      "seven_of_wands.jpg": "Семёрка Жезлов",
+      "eight_of_wands.jpg": "Восьмёрка Жезлов",
+      "nine_of_wands.jpg": "Девятка Жезлов",
+      "ten_of_wands.jpg": "Десятка Жезлов",
+      "page_of_wands.jpg": "Паж Жезлов",
+      "knight_of_wands.jpg": "Рыцарь Жезлов",
+      "queen_of_wands.jpg": "Королева Жезлов",
+      "king_of_wands.jpg": "Король Жезлов",
+      "ace_of_cups.jpg": "Туз Кубков",
+      "two_of_cups.jpg": "Двойка Кубков",
+      "three_of_cups.jpg": "Тройка Кубков",
+      "four_of_cups.jpg": "Четвёрка Кубков",
+      "five_of_cups.jpg": "Пятёрка Кубков",
+      "six_of_cups.jpg": "Шестёрка Кубков",
+      "seven_of_cups.jpg": "Семёрка Кубков",
+      "eight_of_cups.jpg": "Восьмёрка Кубков",
+      "nine_of_cups.jpg": "Девятка Кубков",
+      "ten_of_cups.jpg": "Десятка Кубков",
+      "page_of_cups.jpg": "Паж Кубков",
+      "knight_of_cups.jpg": "Рыцарь Кубков",
+      "queen_of_cups.jpg": "Королева Кубков",
+      "king_of_cups.jpg": "Король Кубков",
+      "ace_of_swords.jpg": "Туз Мечей",
+      "two_of_swords.jpg": "Двойка Мечей",
+      "three_of_swords.jpg": "Тройка Мечей",
+      "four_of_swords.jpg": "Четвёрка Мечей",
+      "five_of_swords.jpg": "Пятёрка Мечей",
+      "six_of_swords.jpg": "Шестёрка Мечей",
+      "seven_of_swords.jpg": "Семёрка Мечей",
+      "eight_of_swords.jpg": "Восьмёрка Мечей",
+      "nine_of_swords.jpg": "Девятка Мечей",
+      "ten_of_swords.jpg": "Десятка Мечей",
+      "page_of_swords.jpg": "Паж Мечей",
+      "knight_of_swords.jpg": "Рыцарь Мечей",
+      "queen_of_swords.jpg": "Королева Мечей",
+      "king_of_swords.jpg": "Король Мечей",
+      "ace_of_pentacles.jpg": "Туз Пентаклей",
+      "two_of_pentacles.jpg": "Двойка Пентаклей",
+      "three_of_pentacles.jpg": "Тройка Пентаклей",
+      "four_of_pentacles.jpg": "Четвёрка Пентаклей",
+      "five_of_pentacles.jpg": "Пятёрка Пентаклей",
+      "six_of_pentacles.jpg": "Шестёрка Пентаклей",
+      "seven_of_pentacles.jpg": "Семёрка Пентаклей",
+      "eight_of_pentacles.jpg": "Восьмёрка Пентаклей",
+      "nine_of_pentacles.jpg": "Девятка Пентаклей",
+      "ten_of_pentacles.jpg": "Десятка Пентаклей",
+      "page_of_pentacles.jpg": "Паж Пентаклей",
+      "knight_of_pentacles.jpg": "Рыцарь Пентаклей",
+      "queen_of_pentacles.jpg": "Королева Пентаклей",
+      "king_of_pentacles.jpg": "Король Пентаклей"
+    };
+
+    const cardNamesEn = Object.fromEntries(
+      Object.entries(cardNamesRu).map(([key]) => [key, key.replace(".jpg", "").replace(/_/g, " ")])
+    );
+
+    const meanings = {
+      en: {
+        // Major Arcana
+        "fool.jpg": "New beginnings, spontaneity, limitless potential.",
+        "magician.jpg": "Power, skill, concentration, manifestation.",
+        "highpriestess.jpg": "Intuition, subconscious, inner wisdom.",
+        "empress.jpg": "Femininity, beauty, nature, nurturing.",
+        "emperor.jpg": "Authority, structure, control, fatherhood.",
+        "hierophant.jpg": "Tradition, institutions, education, morality.",
+        "the_lovers.jpg": "Love, harmony, union, values alignment.",
+        "the_chariot.jpg": "Determination, victory, willpower.",
+        "strength.jpg": "Courage, compassion, focus, mastery.",
+        "the_hermit.jpg": "Soul searching, solitude, inner guidance.",
+        "the_wheel_of_fortune.jpg": "Change, cycles, inevitable fate.",
+        "justice.jpg": "Fairness, truth, cause and effect.",
+        "the_hanged_man.jpg": "Pause, surrender, new perspectives.",
+        "death.jpg": "Endings, transformation, rebirth.",
+        "temperance.jpg": "Balance, moderation, patience, purpose.",
+        "the_devil.jpg": "Addiction, materialism, playfulness.",
+        "the_tower.jpg": "Awakening, chaos, revelation, disruption.",
+        "the_star.jpg": "Hope, faith, renewal, inspiration.",
+        "the_moon.jpg": "Illusion, intuition, fear, subconscious.",
+        "the_sun.jpg": "Joy, success, vitality, celebration.",
+        "judgment.jpg": "Reflection, reckoning, awakening.",
+        "the_world.jpg": "Completion, wholeness, travel.",
+        // Wands
+        "ace_of_wands.jpg": "Inspiration, new opportunities, growth.",
+        "two_of_wands.jpg": "Planning, choices, foresight.",
+        "three_of_wands.jpg": "Expansion, progress, long-term vision.",
+        "four_of_wands.jpg": "Celebration, homecoming, stability.",
+        "five_of_wands.jpg": "Competition, conflict, tension.",
+        "six_of_wands.jpg": "Victory, recognition, self-confidence.",
+        "seven_of_wands.jpg": "Defence, standing your ground.",
+        "eight_of_wands.jpg": "Movement, swiftness, action.",
+        "nine_of_wands.jpg": "Resilience, persistence, last stand.",
+        "ten_of_wands.jpg": "Burden, responsibility, weight.",
+        "page_of_wands.jpg": "Adventure, exploration, enthusiasm.",
+        "knight_of_wands.jpg": "Chivalry, passion, energy.",
+        "queen_of_wands.jpg": "Confidence, charisma, warmth.",
+        "king_of_wands.jpg": "Leadership, vision, authority.",
+        // Cups
+        "ace_of_cups.jpg": "Emotional beginning, love, healing.",
+        "two_of_cups.jpg": "Partnership, mutual connection.",
+        "three_of_cups.jpg": "Friendship, celebration, support.",
+        "four_of_cups.jpg": "Apathy, contemplation, re-evaluation.",
+        "five_of_cups.jpg": "Loss, grief, disappointment.",
+        "six_of_cups.jpg": "Nostalgia, childhood memories, innocence.",
+        "seven_of_cups.jpg": "Choices, illusions, fantasy.",
+        "eight_of_cups.jpg": "Walking away, leaving behind.",
+        "nine_of_cups.jpg": "Contentment, emotional fulfillment.",
+        "ten_of_cups.jpg": "Harmony, family, community.",
+        "page_of_cups.jpg": "Creativity, sensitivity, intuition.",
+        "knight_of_cups.jpg": "Romantic, charming, courteous.",
+        "queen_of_cups.jpg": "Empathy, compassion, calm.",
+        "king_of_cups.jpg": "Emotional balance, diplomacy.",
+        // Swords
+        "ace_of_swords.jpg": "Truth, clarity, breakthrough.",
+        "two_of_swords.jpg": "Stalemate, difficult choice.",
+        "three_of_swords.jpg": "Heartbreak, sorrow, betrayal.",
+        "four_of_swords.jpg": "Rest, retreat, recovery.",
+        "five_of_swords.jpg": "Conflict, defeat, loss.",
+        "six_of_swords.jpg": "Transition, moving forward.",
+        "seven_of_swords.jpg": "Deception, dishonesty, trickery.",
+        "eight_of_swords.jpg": "Trapped, restricted, powerless.",
+        "nine_of_swords.jpg": "Anxiety, fear, nightmares.",
+        "ten_of_swords.jpg": "Rock bottom, betrayal, ending.",
+        "page_of_swords.jpg": "Curiosity, alertness, message.",
+        "knight_of_swords.jpg": "Impulsiveness, directness, speed.",
+        "queen_of_swords.jpg": "Clarity, independence, honesty.",
+        "king_of_swords.jpg": "Intellect, leadership, fairness.",
+        // Pentacles
+        "ace_of_pentacles.jpg": "Material gain, prosperity, abundance.",
+        "two_of_pentacles.jpg": "Balance, adaptability, juggling.",
+        "three_of_pentacles.jpg": "Teamwork, collaboration, craftsmanship.",
+        "four_of_pentacles.jpg": "Possessions, security, greed.",
+        "five_of_pentacles.jpg": "Hardship, poverty, exclusion.",
+        "six_of_pentacles.jpg": "Charity, sharing, generosity.",
+        "seven_of_pentacles.jpg": "Assessment, evaluation, patience.",
+        "eight_of_pentacles.jpg": "Dedication, craftsmanship, repetition.",
+        "nine_of_pentacles.jpg": "Self-sufficiency, luxury, independence.",
+        "ten_of_pentacles.jpg": "Wealth, legacy, family.",
+        "page_of_pentacles.jpg": "Learning, routine, practicality.",
+        "knight_of_pentacles.jpg": "Responsibility, reliability, patience.",
+        "queen_of_pentacles.jpg": "Security, comfort, mothering.",
+        "king_of_pentacles.jpg": "Wealth, stability, business."
+      },
+      ru: {
+        // Major Arcana
+        "fool.jpg": "Новые начинания, импульсивность, безграничный потенциал.",
+        "magician.jpg": "Власть, мастерство, концентрация, проявление.",
+        "highpriestess.jpg": "Интуиция, подсознание, внутренняя мудрость.",
+        "empress.jpg": "Женственность, красота, природа, забота.",
+        "emperor.jpg": "Авторитет, структура, контроль, отцовство.",
+        "hierophant.jpg": "Традиции, институты, образование, мораль.",
+        "the_lovers.jpg": "Любовь, гармония, союз, согласованность ценностей.",
+        "the_chariot.jpg": "Решимость, победа, сила воли.",
+        "strength.jpg": "Смелость, сострадание, самоконтроль, власть над собой.",
+        "the_hermit.jpg": "Поиск себя, уединение, внутреннее руководство.",
+        "the_wheel_of_fortune.jpg": "Перемены, циклы, неизбежная судьба.",
+        "justice.jpg": "Справедливость, истина, причины и следствия.",
+        "the_hanged_man.jpg": "Пауза, принятие, новые точки зрения.",
+        "death.jpg": "Завершения, преобразования, возрождение.",
+        "temperance.jpg": "Баланс, умеренность, терпение, цельность.",
+        "the_devil.jpg": "Зависимость, материализм, веселье.",
+        "the_tower.jpg": "Пробуждение, хаос, откровение, разрушение.",
+        "the_star.jpg": "Надежда, вера, обновление, вдохновение.",
+        "the_moon.jpg": "Иллюзия, интуиция, страх, бессознательное.",
+        "the_sun.jpg": "Радость, успех, жизненная энергия, торжество.",
+        "judgment.jpg": "Рефлексия, пробуждение, осознание.",
+        "the_world.jpg": "Завершение, целостность, путешествие.",
+        // Wands
+        "ace_of_wands.jpg": "Вдохновение, новые возможности, рост.",
+        "two_of_wands.jpg": "Планирование, выбор, дальновидность.",
+        "three_of_wands.jpg": "Расширение, прогресс, долгосрочные цели.",
+        "four_of_wands.jpg": "Праздник, возвращение домой, стабильность.",
+        "five_of_wands.jpg": "Конкуренция, напряжение, конфликт.",
+        "six_of_wands.jpg": "Победа, признание, уверенность в себе.",
+        "seven_of_wands.jpg": "Защита, стойкость, защита позиции.",
+        "eight_of_wands.jpg": "Движение, быстрота, действие.",
+        "nine_of_wands.jpg": "Стойкость, настойчивость, последний рубеж.",
+        "ten_of_wands.jpg": "Нагрузка, ответственность, давление.",
+        "page_of_wands.jpg": "Приключения, исследование, энтузиазм.",
+        "knight_of_wands.jpg": "Галантность, страсть, энергия.",
+        "queen_of_wands.jpg": "Уверенность, харизма, тепло.",
+        "king_of_wands.jpg": "Лидерство, видение, авторитет.",
+        // Cups
+        "ace_of_cups.jpg": "Эмоциональное начало, любовь, исцеление.",
+        "two_of_cups.jpg": "Партнерство, взаимопонимание.",
+        "three_of_cups.jpg": "Дружба, праздник, поддержка.",
+        "four_of_cups.jpg": "Апатия, размышление, переоценка.",
+        "five_of_cups.jpg": "Потеря, горе, разочарование.",
+        "six_of_cups.jpg": "Ностальгия, воспоминания детства, невинность.",
+        "seven_of_cups.jpg": "Выбор, иллюзии, фантазии.",
+        "eight_of_cups.jpg": "Уход, оставление позади.",
+        "nine_of_cups.jpg": "Удовлетворение, эмоциональное наполнение.",
+        "ten_of_cups.jpg": "Гармония, семья, сообщество.",
+        "page_of_cups.jpg": "Творчество, чувствительность, интуиция.",
+        "knight_of_cups.jpg": "Романтичность, обаяние, учтивость.",
+        "queen_of_cups.jpg": "Сочувствие, доброта, спокойствие.",
+        "king_of_cups.jpg": "Эмоциональное равновесие, дипломатичность.",
+        // Swords
+        "ace_of_swords.jpg": "Истина, ясность, прорыв.",
+        "two_of_swords.jpg": "Патовая ситуация, сложный выбор.",
+        "three_of_swords.jpg": "Разбитое сердце, скорбь, предательство.",
+        "four_of_swords.jpg": "Покой, отдых, восстановление сил.",
+        "five_of_swords.jpg": "Конфликт, поражение, потеря.",
+        "six_of_swords.jpg": "Переход, движение вперёд.",
+        "seven_of_swords.jpg": "Обман, нечестность, коварство.",
+        "eight_of_swords.jpg": "Плен, ограничения, беспомощность.",
+        "nine_of_swords.jpg": "Тревога, страх, кошмары.",
+        "ten_of_swords.jpg": "Дно, предательство, завершение.",
+        "page_of_swords.jpg": "Любознательность, внимательность, послание.",
+        "knight_of_swords.jpg": "Поспешность, прямота, скорость.",
+        "queen_of_swords.jpg": "Ясность, независимость, честность.",
+        "king_of_swords.jpg": "Интеллект, лидерство, справедливость.",
+        // Pentacles
+        "ace_of_pentacles.jpg": "Материальное благополучие, процветание, изобилие.",
+        "two_of_pentacles.jpg": "Баланс, адаптивность, управление.",
+        "three_of_pentacles.jpg": "Сотрудничество, командная работа, мастерство.",
+        "four_of_pentacles.jpg": "Собственность, безопасность, жадность.",
+        "five_of_pentacles.jpg": "Трудности, бедность, исключение.",
+        "six_of_pentacles.jpg": "Щедрость, деление, помощь.",
+        "seven_of_pentacles.jpg": "Оценка, анализ, терпение.",
+        "eight_of_pentacles.jpg": "Преданность, ремесло, повторяемость.",
+        "nine_of_pentacles.jpg": "Самодостаточность, комфорт, независимость.",
+        "ten_of_pentacles.jpg": "Богатство, наследие, семья.",
+        "page_of_pentacles.jpg": "Обучение, повседневность, практичность.",
+        "knight_of_pentacles.jpg": "Ответственность, надёжность, терпение.",
+        "queen_of_pentacles.jpg": "Безопасность, уют, забота.",
+        "king_of_pentacles.jpg": "Богатство, стабильность, бизнес."
+      }
+    };
+
+    let currentLang = localStorage.getItem("lang") || "en";
+
+    function updateText() {
+      document.getElementById("title").textContent = translations[currentLang].title;
+      document.querySelector(".input-form label").textContent = translations[currentLang].chooseCards;
+      document.querySelector(".input-form button[type='submit']").textContent = translations[currentLang].reveal;
+      document.querySelector("#save-layout-btn").textContent = translations[currentLang].saveLayout;
+      document.getElementById("saved-label").textContent = translations[currentLang].savedLayouts;
+      document.getElementById("loading-text").textContent = translations[currentLang].loading;
+
+      // Обновить названия карт
+      document.querySelectorAll(".card-name").forEach(el => {
+        const cardFile = el.dataset.card;
+        el.textContent = currentLang === "ru" ? cardNamesRu[cardFile] : cardNamesEn[cardFile];
+      });
+
+      // Обновить значения карт
+      document.querySelectorAll(".card-back").forEach(backEl => {
+        const cardFile = backEl.closest('.card')?.querySelector('img')?.src.split("/").pop();
+        if (!cardFile) return;
+        backEl.textContent = meanings[currentLang][cardFile] || "Значение отсутствует.";
+      });
+
+      // Обновить кнопку переключения языка
+      document.getElementById("lang-switch").textContent = currentLang === "en" ? "RU" : "EN";
+    }
+
+    const translations = {
+      en: {
+        title: "Cosmic Archetypes",
+        chooseCards: "Choose number of cards:",
+        reveal: "Reveal Cards",
+        saveLayout: "Save this layout",
+        savedLayouts: "Saved Layouts",
+        loading: "Connecting to the Cosmic Field..."
+      },
+      ru: {
+        title: "Космические Архетипы",
+        chooseCards: "Выберите количество карт:",
+        reveal: "Показать Карты",
+        saveLayout: "Сохранить Расклад",
+        savedLayouts: "Сохранённые Расклады",
+        loading: "Подключение к Космическому Полю..."
+      }
+    };
+
+    document.getElementById("lang-switch").addEventListener("click", () => {
+      currentLang = currentLang === "en" ? "ru" : "en";
+      localStorage.setItem("lang", currentLang);
+      updateText();
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+      particlesJS.load('particles-js', '', {
+        "particles": {
+          "number": {
+            "value": 160,
+            "density": {
+              "enable": true,
+              "value_area": 800
+            }
+          },
+          "color": {
+            "value": ["#ffffff", "#cceeff", "#ffccff"]
+          },
+          "shape": {
+            "type": "circle"
+          },
+          "opacity": {
+            "value": 0.5,
+            "random": true,
+            "anim": {
+              "enable": true,
+              "speed": 0.5,
+              "opacity_min": 0.1,
+              "sync": false
+            }
+          },
+          "size": {
+            "value": 2,
+            "random": true,
+            "anim": {
+              "enable": true,
+              "speed": 2,
+              "size_min": 1,
+              "sync": false
+            }
+          },
+          "line_linked": {
+            "enable": true,
+            "distance": 150,
+            "color": "#ffffff",
+            "opacity": 0.2,
+            "width": 1
+          },
+          "move": {
+            "enable": true,
+            "speed": 0.5,
+            "direction": "none",
+            "random": true,
+            "straight": false,
+            "out_mode": "bounce"
+          }
+        },
+        "interactivity": {
+          "events": {
+            "onhover": {
+              "enable": true,
+              "mode": "repulse"
+            },
+            "onclick": {
+              "enable": true,
+              "mode": "push"
+            }
+          },
+          "modes": {
+            "repulse": {
+              "distance": 70,
+              "duration": 0.4
+            },
+            "push": {
+              "particles_nb": 4
+            }
+          }
+        },
+        "retina_detect": true
+      });
+      updateText();
+      displayMoonPhase();
+      loadSavedLayouts();
+
+      setTimeout(() => {
+        document.getElementById("loader").classList.remove("active");
+        document.getElementById("app").classList.remove("hidden");
+      }, 3000);
+    });
+
+    document.querySelector("form").addEventListener("submit", e => {
+      e.preventDefault();
+      const count = parseInt(document.getElementById("card-count").value);
+      const container = document.getElementById("cards");
+      container.innerHTML = "";
+
+      const shuffled = [...cardImages].sort(() => Math.random() - 0.5).slice(0, count);
+
+      shuffled.forEach((card) => {
+        const cardDiv = document.createElement("div");
+        cardDiv.classList.add("card");
+
+        const inner = document.createElement("div");
+        inner.classList.add("card-inner");
+
+        const front = document.createElement("div");
+        front.classList.add("card-front");
+
+        const img = document.createElement("img");
+        img.src = `images/cards/${card}`;
+        img.alt = card;
+
+        const name = document.createElement("div");
+        name.classList.add("card-name");
+        name.dataset.card = card;
+        name.textContent = currentLang === "ru" ? cardNamesRu[card] : cardNamesEn[card];
+
+        front.appendChild(img);
+        front.appendChild(name);
+
+        const back = document.createElement("div");
+        back.classList.add("card-back");
+        back.textContent = meanings[currentLang][card] || "Значение отсутствует.";
+
+        inner.appendChild(front);
+        inner.appendChild(back);
+        cardDiv.appendChild(inner);
+
+        cardDiv.addEventListener("click", () => {
+          cardDiv.classList.toggle("flipped");
+        });
+
+        cardDiv.addEventListener("dblclick", () => {
+          showModal(card);
+        });
+
+        container.appendChild(cardDiv);
+      });
+    });
+
+    document.getElementById("save-layout-btn").addEventListener("click", () => {
+      const cards = Array.from(document.querySelectorAll(".card")).map(c => {
+        const img = c.querySelector("img");
+        return img?.src.split("/").pop() || "";
+      });
+
+      if (!cards.length) return;
+
+      let layouts = JSON.parse(localStorage.getItem("layouts")) || [];
+      layouts.push({ id: Date.now(), cards });
+      localStorage.setItem("layouts", JSON.stringify(layouts));
+
+      loadSavedLayouts();
+    });
+
+    function loadSavedLayouts() {
+      const container = document.getElementById("saved-layouts");
+      container.innerHTML = "";
+
+      const layouts = JSON.parse(localStorage.getItem("layouts")) || [];
+
+      layouts.slice(-3).forEach(layout => {
+        const div = document.createElement("div");
+        div.className = "layout-preview glass";
+        div.innerHTML = `
+          <strong>${translations[currentLang].title} #${layout.id}</strong>
+          <div class="layout-cards">
+            ${layout.cards.map(card => `<img src="images/cards/${card}" width="50" alt="">`).join("")}
+          </div>
+          <button onclick="loadLayout('${layout.id}')">${translations[currentLang].reveal}</button>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    window.loadLayout = function(id) {
+      const layouts = JSON.parse(localStorage.getItem("layouts")) || [];
+      const layout = layouts.find(l => l.id == id);
+      if (!layout) return;
+
+      const container = document.getElementById("cards");
+      container.innerHTML = "";
+
+      layout.cards.forEach((card) => {
+        const cardDiv = document.createElement("div");
+        cardDiv.classList.add("card");
+
+        const inner = document.createElement("div");
+        inner.classList.add("card-inner");
+
+        const front = document.createElement("div");
+        front.classList.add("card-front");
+
+        const img = document.createElement("img");
+        img.src = `images/cards/${card}`;
+        img.alt = card;
+
+        const name = document.createElement("div");
+        name.classList.add("card-name");
+        name.dataset.card = card;
+        name.textContent = currentLang === "ru" ? cardNamesRu[card] : cardNamesEn[card];
+
+        front.appendChild(img);
+        front.appendChild(name);
+
+        const back = document.createElement("div");
+        back.classList.add("card-back");
+        back.textContent = meanings[currentLang][card] || "Значение отсутствует.";
+
+        inner.appendChild(front);
+        inner.appendChild(back);
+        cardDiv.appendChild(inner);
+
+        cardDiv.addEventListener("click", () => {
+          cardDiv.classList.toggle("flipped");
+        });
+
+        cardDiv.addEventListener("dblclick", () => {
+          showModal(card);
+        });
+
+        container.appendChild(cardDiv);
+      });
+    };
+
+    function showModal(filename) {
+      const modal = document.getElementById("modal");
+      const img = document.getElementById("modal-img");
+      const title = document.getElementById("modal-title");
+      const meaning = document.getElementById("modal-meaning");
+
+      img.src = `images/cards/${filename}`;
+      title.textContent = currentLang === "ru" ? cardNamesRu[filename] : cardNamesEn[filename];
+      meaning.textContent = meanings[currentLang][filename] || "Значение отсутствует.";
+
+      modal.classList.remove("hidden");
+    }
+
+    document.querySelector(".close-btn").addEventListener("click", () => {
+      document.getElementById("modal").classList.add("hidden");
+    });
+
+    document.getElementById("modal").addEventListener("click", function(e) {
+      if (e.target === this) {
+        this.classList.add("hidden");
+      }
+    });
+
+    function getMoonPhase(date = new Date()) {
+      const moonCycles = 29.530588853;
+      const newMoonDate = new Date(2000, 0, 6, 18, 14);
+      const daysSince = (date - newMoonDate) / (1000 * 60 * 60 * 24);
+      const phase = ((daysSince % moonCycles) + moonCycles) % moonCycles;
+
+      const phases = [
+        { name: "New Moon", emoji: "🌑" },
+        { name: "Waxing Crescent", emoji: "🌒" },
+        { name: "First Quarter", emoji: "🌓" },
+        { name: "Waxing Gibbous", emoji: "🌔" },
+        { name: "Full Moon", emoji: "🌕" },
+        { name: "Waning Gibbous", emoji: "🌖" },
+        { name: "Last Quarter", emoji: "🌗" },
+        { name: "Waning Crescent", emoji: "🌘" }
+      ];
+
+      const index = Math.floor((phase / moonCycles) * 8);
+      return phases[index];
+    }
+
+    function displayMoonPhase() {
+      const phase = getMoonPhase();
+      const moonEl = document.getElementById("moon-phase");
+
+      const ruPhases = {
+        "New Moon": "Новолуние",
+        "Waxing Crescent": "Молодая Луна",
+        "First Quarter": "Первая Четверть",
+        "Waxing Gibbous": "Растущая Луна",
+        "Full Moon": "Полнолуние",
+        "Waning Gibbous": "Убывающая Луна",
+        "Last Quarter": "Последняя Четверть",
+        "Waning Crescent": "Старая Луна"
+      };
+
+      moonEl.innerHTML = `${phase.emoji} ${currentLang === "ru" ? ruPhases[phase.name] : phase.name}`;
+    }
+  </script>
+</body>
+</html>
