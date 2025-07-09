@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>The Tarot</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Montserrat:wght@300;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Monomakh&family=Cinzel+Decorative:wght@400;700&family=Montserrat:wght@300;500;700&display=swap" rel="stylesheet">
   <style>
     * {
       box-sizing: border-box;
@@ -42,15 +42,16 @@
     }
 
     header h1 {
-      font-family: 'Cinzel Decorative', cursive;
-      font-size: 1.8rem;
+      font-family: 'Monomakh', cursive;
+      font-size: 2.5rem;
+      letter-spacing: 1px;
     }
 
     .moon-indicator {
       display: flex;
       align-items: center;
-      gap: 6px;
-      font-size: 1rem;
+      gap: 10px;
+      font-size: 1.3rem;
     }
 
     .lang-button {
@@ -225,11 +226,29 @@
       flex-direction: column;
       align-items: center;
       width: 180px;
+      position: relative;
     }
 
     .layout-cards img {
       width: 40px;
       margin: 2px;
+    }
+
+    .layout-date {
+      font-size: 0.8rem;
+      margin: 5px 0;
+      color: #aaa;
+    }
+
+    .delete-layout {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      background: none;
+      border: none;
+      color: #ff6b6b;
+      cursor: pointer;
+      font-size: 1rem;
     }
 
     .modal {
@@ -286,7 +305,11 @@
 
     @media (max-width: 600px) {
       header h1 {
-        font-size: 1.3rem;
+        font-size: 1.5rem;
+      }
+
+      .moon-indicator {
+        font-size: 1rem;
       }
 
       form.input-form {
@@ -682,6 +705,7 @@
       localStorage.setItem("lang", currentLang);
       updateText();
       displayMoonPhase();
+      loadSavedLayouts();
     });
 
     function getMoonPhase(date = new Date()) {
@@ -737,7 +761,6 @@
     }
 
     document.addEventListener("DOMContentLoaded", () => {
-
       updateText();
       displayMoonPhase();
       loadSavedLayouts();
@@ -756,7 +779,7 @@
     document.querySelector("form").addEventListener("submit", e => {
       e.preventDefault();
       let count = parseInt(document.getElementById("card-count").value);
-count = Math.min(12, Math.max(1, count)); // Ограничиваем от 1 до 12
+      count = Math.min(12, Math.max(1, count)); // Ограничиваем от 1 до 12
       const container = document.getElementById("cards");
       container.innerHTML = "";
 
@@ -812,8 +835,27 @@ count = Math.min(12, Math.max(1, count)); // Ограничиваем от 1 д�
 
       if (!cards.length) return;
 
+      const currentDate = new Date();
+      const dateStr = currentDate.toLocaleDateString(currentLang === "ru" ? "ru-RU" : "en-US");
+      const moonPhase = getMoonPhase(currentDate);
+
       let layouts = JSON.parse(localStorage.getItem("layouts")) || [];
-      layouts.push({ id: Date.now(), cards });
+      layouts.push({ 
+        id: Date.now(), 
+        cards,
+        date: dateStr,
+        moonPhase: moonPhase.emoji + " " + (currentLang === "ru" ? 
+          {
+            "New Moon": "Новолуние",
+            "Waxing Crescent": "Молодая Луна",
+            "First Quarter": "Первая Четверть",
+            "Waxing Gibbous": "Растущая Луна",
+            "Full Moon": "Полнолуние",
+            "Waning Gibbous": "Убывающая Луна",
+            "Last Quarter": "Последняя Четверть",
+            "Waning Crescent": "Старая Луна"
+          }[moonPhase.name] : moonPhase.name)
+      });
       localStorage.setItem("layouts", JSON.stringify(layouts));
 
       loadSavedLayouts();
@@ -825,11 +867,13 @@ count = Math.min(12, Math.max(1, count)); // Ограничиваем от 1 д�
 
       const layouts = JSON.parse(localStorage.getItem("layouts")) || [];
 
-      layouts.slice(-3).forEach(layout => {
+      layouts.slice(-3).reverse().forEach(layout => {
         const div = document.createElement("div");
         div.className = "layout-preview glass";
         div.innerHTML = `
-          <strong>${translations[currentLang].title} #${layout.id}</strong>
+          <button class="delete-layout" onclick="deleteLayout(${layout.id})">×</button>
+          <div class="layout-date">${layout.date}</div>
+          <div class="moon-indicator">${layout.moonPhase}</div>
           <div class="layout-cards">
             ${layout.cards.map(card => `<img src="images/cards/${card}" width="50" alt="">`).join("")}
           </div>
@@ -838,6 +882,13 @@ count = Math.min(12, Math.max(1, count)); // Ограничиваем от 1 д�
         container.appendChild(div);
       });
     }
+
+    window.deleteLayout = function(id) {
+      let layouts = JSON.parse(localStorage.getItem("layouts")) || [];
+      layouts = layouts.filter(l => l.id != id);
+      localStorage.setItem("layouts", JSON.stringify(layouts));
+      loadSavedLayouts();
+    };
 
     window.loadLayout = function(id) {
       const layouts = JSON.parse(localStorage.getItem("layouts")) || [];
@@ -902,3 +953,4 @@ count = Math.min(12, Math.max(1, count)); // Ограничиваем от 1 д�
   </script>
 </body>
 </html>
+
